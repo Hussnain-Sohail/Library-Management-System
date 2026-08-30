@@ -1,5 +1,5 @@
-import { useState } from "react";
-
+import { useState, useContext } from "react";
+import { authProvider } from "./TokenProvider";
 function SignUp() {
 
     const [name, setUserName] = useState<string>("");
@@ -10,7 +10,6 @@ function SignUp() {
 
     const getValueString = (setter: React.Dispatch<React.SetStateAction<string>>) => {
         return (event: React.ChangeEvent<HTMLInputElement>) => {
-            //React.Dispatch<React.SetStateAction<string>>
             setter(event.target.value);
         }
     }
@@ -27,7 +26,8 @@ function SignUp() {
             const request = await fetch("http://localhost:3500/user/signup", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "Credentilas": "include",
                 },
                 body: JSON.stringify({ name, age, password }),
             });
@@ -36,7 +36,13 @@ function SignUp() {
                 setResponseMessage("Could not send requeest");
 
             const response = await request.json();
-            setResponseMessage(response.message);
+            const context = useContext(authProvider);
+            if (!context)
+                setResponseMessage("Could not create context");
+            else {
+                setResponseMessage(response.message);
+                context!.setAccessToken(response.accessToken);
+            }
 
         }
         catch (error) {
