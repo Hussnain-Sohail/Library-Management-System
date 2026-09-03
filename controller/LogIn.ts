@@ -13,28 +13,38 @@ const data = zod.object({
     userPassword: zod.string(),
 });
 
-interface redisRequest {
-    userName: string,
-    tries: number,
-};
-
 async function LogIn(req: Request, res: Response): Promise<void> {
     try {
+
         const validData = data.safeParse(req.body);
         if (!validData.success) {
             res.status(400).json({ message: validData.error.issues[0]?.message ?? "Invalid input" });
             return;
         }
 
+        const key: Promise<string | null> = client.get(validData.data.userName);
+        if (key !== null) {
+            const totalAttempts: number = Number(key);
+            if (totalAttempts >= 3) {
+                res.status(403).json({ message: "To many requests. Your'e requests have been blocked\n. Please wait 30 seconds to try again" });
+                return;
+            }
+        }
+
+
+        client.set(validData.data.userName, 0, { NX: true, EX: 30 });
+
         const findUser: IUser | null = await User.findOne({ userName: validData.data.userName });
 
         if (findUser == null) {
+            client.incr(validData.data.userName);
             res.status(400).json({ message: "User not found" });
             return;
         }
 
         const correctPassword: boolean = await bcrypt.compare(validData.data.userPassword, findUser.userPassword);
         if (!correctPassword) {
+            client.incr(validData.data.userName);
             res.status(403).json({ message: "Incorrect Password" });
             return;
         }
