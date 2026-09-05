@@ -6,12 +6,12 @@ import jwt from "jsonwebtoken"
 import dotenv from "dotenv"
 import cookieParser from "cookie-parser"
 import User from "../model/UserSchema.ts"
+import type { IUser } from "../model/UserSchema.ts"
 
 const data = zod.object({
     userName: zod.string(),
     userAge: zod.number().min(18),
     userPassword: zod.string(),
-    userTier: zod.string(),
 });
 
 async function SignUp(req: Request, res: Response): Promise<void> {
@@ -22,13 +22,18 @@ async function SignUp(req: Request, res: Response): Promise<void> {
             return;
         }
 
+        const userAlreadyExists = await User.findOne({ userName: valid_data.data.userName });
+        if (userAlreadyExists !== null) {
+            res.status(400).json({ message: "Username already exists" });
+            return;
+        }
+
         const hashedPassword = await bcrypt.hash(valid_data.data.userPassword, 10);
 
         const newUser = new User({
             userName: valid_data.data.userName,
             userAge: valid_data.data.userAge,
             userPassword: hashedPassword,
-            userTier: valid_data.data.userTier,
         });
 
         await newUser.save();
