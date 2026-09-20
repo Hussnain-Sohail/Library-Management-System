@@ -1,17 +1,29 @@
 import { Link } from "react-router-dom"
+import "./css/WelcomeUser.css"
 
 function WelcomeUser() {
     return (
         <div id="root">
-            <h1>Welcome User</h1>
-            <h2>Please Select 1 Option</h2>
-            <Link to="/user/signup">
-                <h2>Create My Account</h2>
-            </Link>
-            <Link to="/user/login">
-                <h2>LogIn to My Account</h2>
-            </Link>
+            <div id="bodyWelcome">
+
+                <h1>Welcome</h1>
+                <h1>To My Library</h1>
+                <h1>Please Select</h1>
+
+
+                <Link to='/user/signup'>
+                    <button>
+                        SingUp
+                    </button>
+                </Link>
+                <Link to='/user/login'>
+                    <button>
+                        Log In
+                    </button>
+                </Link>
+
+            </div>
         </div>
-    )
+    );
 }
 export default WelcomeUser;
