@@ -1,7 +1,7 @@
 import { useState, useContext } from "react";
 import { authProvider } from "./TokenProvider";
 import { Link } from "react-router-dom";
-import "./css/SignUp.css"
+import styles from "./css/SignUp.module.css"
 function SignUp() {
 
     const [userName, setUserName] = useState<string>("");
@@ -42,10 +42,11 @@ function SignUp() {
                 setResponseMessage("Could not send requeest");
                 console.log("request not ok");
             }
-
-            const response = await request.json();
-            setResponseMessage(response.message);
-            context!.setAccessToken(response.accessToken);
+            else {
+                const response = await request.json();
+                setResponseMessage(response.message);
+                context!.setAccessToken(response.accessToken);
+            }
 
         }
         catch (error) {
@@ -55,9 +56,9 @@ function SignUp() {
     }
 
     return (
-        <div id="root">
+        <div className={styles.root}>
 
-            <div id="left">
+            <div className={styles.left}>
                 <h1>Sign Up And</h1>
                 <h1>Create Your'e Account</h1>
                 <p>Already have an Account !</p>
@@ -66,7 +67,7 @@ function SignUp() {
                 </Link>
             </div>
 
-            <div id="right">
+            <div className={styles.right}>
                 <form onSubmit={submit}>
 
                     <label>Enter Name</label><br />
@@ -79,10 +80,8 @@ function SignUp() {
                     <input type="password" onChange={getValueString(setUserPassword)} required /><br />
 
                     <button>Submit Request</button>
-
-                    {responseMessage && <p>{responseMessage}</p>}
-
                 </form>
+                {responseMessage && <p style={{ color: "white", fontSize: "20px", marginTop: "3px" }}>{responseMessage}</p>}
             </div>
         </div>
     )

@@ -1,12 +1,17 @@
 import { useState, useContext } from "react";
+import { Link } from "react-router-dom";
 import { authProvider } from "./TokenProvider";
-
+import styles from "./css/Login.module.css"
 function LogIn() {
 
-    const [name, setUserName] = useState<string>("");
-    const [password, setUserPassword] = useState<string>("");
+    const [userName, setUserName] = useState<string>("");
+    const [userPassword, setUserPassword] = useState<string>("");
 
     const [responseMessage, setResponseMessage] = useState<string>("");
+
+    const context = useContext(authProvider);
+    if (!context)
+        console.error("Could not load context");
 
     const getValueString = (setter: React.Dispatch<React.SetStateAction<string>>) => {
         return (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -17,24 +22,21 @@ function LogIn() {
     const submit = async (event: React.FormEvent<HTMLFormElement>) => {
         try {
             event.preventDefault();
-            const request = await fetch("http://localhost:3500/user/signup", {
+            const request = await fetch("http://localhost:3500/user/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "Credentilas": "include",
                 },
-                body: JSON.stringify({ name, password }),
+                body: JSON.stringify({ userName, userPassword }),
             });
 
-            if (!request.ok)
+            if (!request.ok) {
                 setResponseMessage("Could not send requeest");
-
-            const response = await request.json();
-
-            const context = useContext(authProvider);
-            if (!context)
-                setResponseMessage("Could not create context");
+                console.error("Request not ok in login.tsx");
+            }
             else {
+                const response = await request.json();
                 setResponseMessage(response.message);
                 context!.setAccessToken(response.accessToken);
             }
@@ -47,19 +49,33 @@ function LogIn() {
     }
 
     return (
-        <form onSubmit={submit}>
+        <div className={styles.container}>
 
-            <label>Enter Name</label><br />
-            <input type="text" onChange={getValueString(setUserName)} required /><br />
+            <div className={styles.left}>
+                <h1>Login to your'e Account</h1>
+                <h3>Dont have an Account !</h3>
+                <Link to='/user/login'>
+                    <p>Sign Up</p>
+                </Link>
+            </div>
 
-            <label>Enter Password</label><br />
-            <input type="password" onChange={getValueString(setUserPassword)} required /><br />
+            <div className={styles.right}>
+                <form onSubmit={submit}>
 
-            <button>Submit Request</button>
+                    <label>Enter Name</label><br />
+                    <input type="text" onChange={getValueString(setUserName)} required /><br />
 
-            {responseMessage && <p>{responseMessage}</p>}
+                    <label>Enter Password</label><br />
+                    <input type="password" onChange={getValueString(setUserPassword)} required /><br />
 
-        </form>
+                    <button>Submit Request</button>
+
+                    {responseMessage && <p style={{ color: "white", font: "20px", marginTop: "5px" }}>{responseMessage}</p>}
+
+                </form>
+            </div>
+
+        </div>
     )
 }
 
