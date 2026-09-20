@@ -1,0 +1,40 @@
+#root {
+    background-color: black;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100dvh;
+    width: 100dvw;
+    padding: 30;
+    margin: 0;
+}
+
+#bodyWelcome {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 400px;
+    height: 350px;
+    border: 3px solid rgba(0, 0, 0, 0.274);
+    border-radius: 10px;
+    box-shadow: 5px 5px 20px rgba(0, 128, 0, 0.751), -5px -5px 20px rgba(0, 128, 0, 0.751);
+}
+
+#bodyWelcome button {
+    height: 30px;
+    width: 180px;
+    font-size: larger;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background-color: rgba(0, 128, 0, 0.395);
+    color: white;
+    border: 1px solid white;
+    border-radius: 8px;
+}
+
+#bodyWelcome button:hover {
+    box-shadow: 3px 3px 15px rgba(0, 128, 0, 0.751), -3px -3px 15px rgba(0, 128, 0, 0.751);
+}
