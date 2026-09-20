@@ -1,12 +1,18 @@
 import { useState, useContext } from "react";
 import { authProvider } from "./TokenProvider";
+import { Link } from "react-router-dom";
+import "./css/SignUp.css"
 function SignUp() {
 
-    const [name, setUserName] = useState<string>("");
-    const [age, setUserAge] = useState<number>(18);
-    const [password, setUserPassword] = useState<string>("");
+    const [userName, setUserName] = useState<string>("");
+    const [userAge, setUserAge] = useState<number>(18);
+    const [userPassword, setUserPassword] = useState<string>("");
 
     const [responseMessage, setResponseMessage] = useState<string>("");
+
+    const context = useContext(authProvider);
+    if (!context)
+        console.error("Could not load context")
 
     const getValueString = (setter: React.Dispatch<React.SetStateAction<string>>) => {
         return (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,22 +33,19 @@ function SignUp() {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Credentilas": "include",
                 },
-                body: JSON.stringify({ name, age, password }),
+                credentials: "include",
+                body: JSON.stringify({ userName, userAge, userPassword }),
             });
-
-            if (!request.ok)
+            2
+            if (!request.ok) {
                 setResponseMessage("Could not send requeest");
+                console.log("request not ok");
+            }
 
             const response = await request.json();
-            const context = useContext(authProvider);
-            if (!context)
-                setResponseMessage("Could not create context");
-            else {
-                setResponseMessage(response.message);
-                context!.setAccessToken(response.accessToken);
-            }
+            setResponseMessage(response.message);
+            context!.setAccessToken(response.accessToken);
 
         }
         catch (error) {
@@ -52,22 +55,36 @@ function SignUp() {
     }
 
     return (
-        <form onSubmit={submit}>
+        <div id="root">
 
-            <label>Enter Name</label><br />
-            <input type="text" onChange={getValueString(setUserName)} required /><br />
+            <div id="left">
+                <h1>Sign Up And</h1>
+                <h1>Create Your'e Account</h1>
+                <p>Already have an Account !</p>
+                <Link to='/user/login'>
+                    <p>Log in to my Account</p>
+                </Link>
+            </div>
 
-            <label>Enter Age</label><br />
-            <input type="number" onChange={getValueIntegral(setUserAge)} required min={18} /><br />
+            <div id="right">
+                <form onSubmit={submit}>
 
-            <label>Enter Password</label><br />
-            <input type="password" onChange={getValueString(setUserPassword)} required /><br />
+                    <label>Enter Name</label><br />
+                    <input type="text" onChange={getValueString(setUserName)} required /><br />
 
-            <button>Submit Request</button>
+                    <label>Enter Age</label><br />
+                    <input type="number" onChange={getValueIntegral(setUserAge)} required min={18} /><br />
 
-            {responseMessage && <p>{responseMessage}</p>}
+                    <label>Enter Password</label><br />
+                    <input type="password" onChange={getValueString(setUserPassword)} required /><br />
 
-        </form>
+                    <button>Submit Request</button>
+
+                    {responseMessage && <p>{responseMessage}</p>}
+
+                </form>
+            </div>
+        </div>
     )
 }
 
