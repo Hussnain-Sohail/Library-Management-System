@@ -1,0 +1,64 @@
+.root {
+    background-color: black;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    height: 100dvh;
+    width: 100dvw;
+    padding: 30;
+    margin: 0;
+}
+
+.left {
+    padding-left: 20px;
+    background-color: rgba(245, 245, 245, 0.868);
+    height: 340px;
+    width: 250px;
+}
+
+.left h1,
+p,
+a {
+    color: black;
+}
+
+.right {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: rgba(0, 0, 255, 0.708);
+    height: 340px;
+    width: 250px;
+}
+
+.right label {
+    color: white;
+    font-size: xx-large;
+    font-weight: 100;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.right input {
+    height: 20px;
+    width: 220px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+.right button {
+    height: 35px;
+    width: 220px;
+    font-size: larger;
+    margin-top: 15px;
+    background-color: black;
+    color: white;
+    border-radius: 10px;
+}
+
+.right button:hover {
+    box-shadow: 3px 3px 5px black, -3px -3px 5px black;
+}
