@@ -2,6 +2,7 @@ import express from "express";
 import type { Request, Response } from "express";
 import zod from "zod";
 import bcrypt from "bcrypt";
+import { v2 as cloudinary } from "cloudinary";
 import Book from "../../model/BookSchema.ts";
 import User from "../../model/UserSchema.ts";
 
@@ -10,8 +11,15 @@ const book = zod.object({
     bookPrice: zod.number().min(1),
     totalAvailable: zod.number().min(1),
     Genre: zod.string(),
+    imageURL: zod.string(),
     otherInfo: zod.string().optional(),
     userPassword: zod.string(),
+});
+
+cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME!,
+    api_key: process.env.CLOUD_API_KEY!,
+    api_secret: process.env.CLOUD_API_SECRET!,
 });
 
 async function AddNewBook(req: Request, res: Response): Promise<void> {
@@ -38,10 +46,20 @@ async function AddNewBook(req: Request, res: Response): Promise<void> {
             return;
         }
 
+        const uploadedImage = await cloudinary.uploader.upload(validBoook.data.imageURL);
+        if (!uploadedImage) {
+            res.status(500).json({ message: "Server error. Could not upload Image" });
+            return;
+        }
+
         const newBook = new Book({
             bookName: validBoook.data.bookName,
             bookPrice: validBoook.data.bookPrice,
             totalAvailable: validBoook.data.totalAvailable,
+            Genre: validBoook.data.Genre,
+            otherInfo: validBoook.data.otherInfo ?? "No more relevant information available",
+            imageSecureURL: uploadedImage.secure_url,
+            imagePublicID: uploadedImage.public_id,
         });
 
         await newBook.save();
