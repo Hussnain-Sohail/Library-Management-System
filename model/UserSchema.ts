@@ -5,6 +5,7 @@ interface IUser {
     userAge: number,
     userPassword: string,
     userTier: string,
+    userRole: string,
 
     _id: string,
 };
@@ -13,7 +14,14 @@ const UserSchema = new mongoose.Schema({
     userName: String,
     userAge: Number,
     userPassword: String,
-    userTier: String,
+    userTier: {
+        type: String,
+        default: 'regular',
+    },
+    userRole: {
+        type: String,
+        default: "user",
+    },
 });
 
 const User = mongoose.model("User", UserSchema);
