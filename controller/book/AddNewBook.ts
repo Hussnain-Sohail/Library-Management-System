@@ -9,6 +9,8 @@ const book = zod.object({
     bookName: zod.string(),
     bookPrice: zod.number().min(1),
     totalAvailable: zod.number().min(1),
+    Genre: zod.string(),
+    otherInfo: zod.string().optional(),
     userPassword: zod.string(),
 });
 
@@ -26,7 +28,7 @@ async function AddNewBook(req: Request, res: Response): Promise<void> {
             res.status(400).json({ message: "User not found" });
             return;
         } else if (user.userRole !== "admin") {
-            res.status(400).json({ message: "User role is not admin. Access forbidden" });
+            res.status(400).json({ message: "Access forbidden" });
             return;
         }
 

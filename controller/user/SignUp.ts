@@ -5,8 +5,8 @@ import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import dotenv from "dotenv"
 import cookieParser from "cookie-parser"
-import User from "../model/UserSchema.ts"
-import type { IUser } from "../model/UserSchema.ts"
+import User from "../../model/UserSchema.ts"
+import type { IUser } from "../../model/UserSchema.ts"
 
 const data = zod.object({
     userName: zod.string(),
