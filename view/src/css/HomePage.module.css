@@ -1,0 +1,24 @@
+#root {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    min-height: 100dvh;
+    min-width: 100dvw;
+    background-color: black;
+    color: white;
+}
+
+.Book {
+    width: 400px;
+    height: 400px;
+    background-color: rgba(128, 128, 128, 0.541);
+    color: white;
+    border: 3px solid white;
+    border-radius: 15px;
+}
+
+.Book :hover {
+    width: 420px;
+    height: 420px;
+}

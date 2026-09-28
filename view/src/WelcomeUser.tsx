@@ -13,7 +13,7 @@ function WelcomeUser() {
 
                 <Link to='/user/signup'>
                     <button>
-                        SingUp
+                        SignUp
                     </button>
                 </Link>
                 <Link to='/user/login'>

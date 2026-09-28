@@ -24,9 +24,9 @@ function LogIn() {
             event.preventDefault();
             const request = await fetch("http://localhost:3500/user/login", {
                 method: "POST",
+                credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
-                    "Credentilas": "include",
                 },
                 body: JSON.stringify({ userName, userPassword }),
             });
