@@ -4,6 +4,7 @@ import SignUp from "./SignUp"
 import LogIn from "./LogIn"
 import HomePage from "./HomePage"
 import Protector from "./Protect"
+import AddNewBook from "./AddNewBook"
 function App() {
   return (
     <div>
@@ -12,6 +13,8 @@ function App() {
         <Route path="/user/signup" element={<SignUp />} />
         <Route path="/user/login" element={<LogIn />} />
         <Route path="/homepage" element={<Protector><HomePage /></Protector>} />
+        <Route path="/admin/addnewbook" element={<Protector><AddNewBook /></Protector>} />
+
       </Routes>
     </div>
   )
