@@ -1,8 +1,6 @@
-import { useState, useContext, useEffect } from "react";
-import { authProvider } from "./TokenProvider";
-import GetNewAccessToken from "./Protect";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "./css/HomePage.module.css"
+import style from "./css/HomePage.module.css"
 
 interface book {
     bookName: string,
@@ -16,71 +14,53 @@ interface book {
 
 function HomePage() {
 
-    const context = useContext(authProvider);
-    const [books, setBokks] = useState<book[] | null>(null);
+    const [bookSample, setBookSample] = useState<book[]>([]);
+    const [message, setMessage] = useState<string>("");
     const navigate = useNavigate();
-    const [validUser, setValidUser] = useState<boolean>(true);
-    const [error, setError] = useState<string>("");
-
-    if (!context)
-        console.error("Could not create context");
-
-    useEffect(() => {
-        const helper = async () => {
-            try {
-                if (!(context!.accessToken)) {
-                    const newTokenRecieved: boolean = await GetNewAccessToken();
-                    if (!newTokenRecieved)
-                        setValidUser(false);
-                }
-            }
-            catch (error) {
-                console.error(error);
-            }
-        };
-        helper();
-    }, [])
-
-    if (!validUser)
-        navigate("/");
 
     const getSample = async () => {
         try {
-            const request = await fetch("http://localhost:3500/homepage", {
+            const request = await fetch("http://localhost:3500/book/sample", {
                 method: "POST",
-                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                    "credentials": "include"
+                },
             });
-
-            if (!request.ok)
-                setError("Could not get Contents. Please try to refresh");
-
+            if (!request.ok) {
+                navigate("/");
+            }
             const response = await request.json();
-            setBokks(response.books);
+            setBookSample(response.message);
+            setMessage("");
         }
         catch (error) {
             console.error(error);
+            setMessage("Could not get Page Content");
         }
     }
 
     useEffect(() => {
-        const executor = async () => {
+        async () => {
             await getSample();
         }
-    }, []);
+    });
 
     return (
-        <div id="root">
-            {books !== null && books.map((book: book, index) => (
-                <div className="Book" id={String(index)}>
-                    <img src={book.imageSecureURL} />
-                    <p>Name {book.bookName}</p>
-                    <p>Price {book.bookPrice}</p>
-                    <button>Click to see more information</button>
-                </div>
-            ))};
-            {error && <h1>{error}</h1>}
+        <div id={style.root}>
+            {message.length !== 0 && <h1>{message}</h1>}
+            <div id={style.sampleArray}>
+                {bookSample.map(book => (
+                    <div>
+                        <img src={book.imagePublicID} />
+                        <p>Name: {book.bookName}</p>
+                        <button>Click for more information</button>
+                    </div>
+                ))};
+            </div>
         </div>
     )
+
 }
 
 export default HomePage;
